@@ -1,0 +1,6 @@
+{
+  "scriptId": "${YOUR_SCRIPT_ID}",
+  "rootDir": "./src",
+  "scriptExtensions": [".js", ".gs"],
+  "filePushOrder": ["globals.gs", "main.js"]
+}
