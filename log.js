@@ -1,4 +1,4 @@
-const logSheetId = "你的GoogleSheet_ID";
+const logSheetId = "";
 
 /**
  * 記錄電影事件新增或修改的歷程到指定的 Google Sheet。
