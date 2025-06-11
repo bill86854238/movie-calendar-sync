@@ -42,6 +42,7 @@ function addMoviesFromAllToCalendar() {
             } else {
               // 🗑️ 刪除錯誤日期的事件
               Logger.log(`❌ 刪除錯誤日期事件: ${eventTitle} (原日期: ${eventDate.toDateString()})`);
+              recordChange('刪除', title, eventDate);
               e.deleteEvent();
             }
           }
@@ -50,6 +51,7 @@ function addMoviesFromAllToCalendar() {
         if (!foundCorrectDate) {
           calendar.createAllDayEvent(eventTitle, date);
           Logger.log(`✅ 新增電影: ${title}，上映日: ${date.toDateString()}`);
+          recordChange('新增', title, date);   // 呼叫獨立函式
         } else {
           Logger.log(`🔁 已存在正確事件: ${title}，上映日: ${date.toDateString()}`);
         }
