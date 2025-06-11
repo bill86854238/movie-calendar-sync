@@ -1,17 +1,27 @@
 # movie-calendar-sync
 
-這個專案是一個 Google Apps Script 腳本，用來從《開眼電影網》自動擷取即將上映電影的資料，並建立對應的 Google 日曆事件。
+這個專案是一個 Google Apps Script 腳本，用來自動從《開眼電影網》擷取即將上映的電影資料，並同步到 Google 日曆。
 
 ## 功能特色
 
-- 自動抓取《開眼電影網》的上映排程
+- 自動抓取《開眼電影網》上映排程
 - 每部電影建立「電影名稱 上映」的全日行事曆事件
-- 若電影上映日期變動，自動刪除錯誤日期並新增正確日期
-- 每日排程執行一次，確保行事曆最新
+- 支援上映日期變動時，自動更新（刪除錯誤日期事件，新增正確日期事件）
+- 紀錄新增與修改的歷程到 Google 試算表，方便追蹤
+- 建議每日執行一次，保持行事曆資料最新
 
 ## 使用方式
 
-1. 將 `addMoviesFromAllToCalendar()` 貼入 Google Apps Script
-2. 替換你的 Google Calendar ID
-3. 設定每日時間驅動器（trigger）定期執行
+1. 在 Google Apps Script 中貼上 `addMoviesFromAllToCalendar()` 函式及相關輔助函式
+2. 將你的 Google Calendar ID 填入程式碼中
+3. （可選）設定 Google 試算表並提供試算表 ID，用於紀錄變動歷程
+4. 設定時間驅動器（Trigger）每天定期執行同步程式，建議每天跑一次
 
+## 注意事項
+
+- 確認 Google Calendar 和 Google 試算表有權限供腳本存取
+- 若試算表 ID 未提供，會跳過紀錄歷程的步驟
+- 每次同步會自動檢查是否已有該電影日期事件，避免重複新增
+- 當發現電影上映日期變更時，會更新日曆事件並記錄變動
+
+---
