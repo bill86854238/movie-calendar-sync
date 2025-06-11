@@ -2,7 +2,6 @@ function addMoviesFromAllToCalendar() {
   const url = "https://www.atmovies.com.tw/movie/next/0/";
   const html = UrlFetchApp.fetch(url).getContentText();
 
-  const calendarId = "859bef4bb606e02477351cf5a54021e7d31ee4aaa313e469a879a6f6310e4df0@group.calendar.google.com";
   const calendar = CalendarApp.getCalendarById(calendarId);
 
   const sectionPattern = /<h2 class="major">\s*<span>(\d{4}\/\d{2}\/\d{2})<\/span>\s*<\/h2>\s*<ul class="filmListAll">([\s\S]*?)<\/ul>/g;
