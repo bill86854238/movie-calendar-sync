@@ -22,16 +22,17 @@ function addMoviesFromAllToCalendar() {
       const titleMatch = /<div class="filmtitle">\s*<a[^>]*>(.*?)<\/a>/i.exec(liBlock);
       if (titleMatch) {
         const detaiMatch = /<div class="filmtitle">\s*<a\s+href="([^"]+)">([^<]+)<\/a>/i.exec(liBlock);
-        let  description = '';
+        let description = '';
         let imdbId = '';
+        let detailUrl = '';
         if(detaiMatch){
-        const detailUrl = "https://www.atmovies.com.tw" + detaiMatch[1]; // 詳細頁完整網址
-        imdbId = "tt"+ fetchIMDbIdFromDetailPage(detailUrl);
-        description = imdbId
-            ? `IMDb 網頁：https://www.imdb.com/title/${imdbId}`
-            : '';
-        Logger.log(`IMDb ID: ${imdbId}`);
-        Logger.log(`description: ${description}`);
+          detailUrl = "https://www.atmovies.com.tw" + detaiMatch[1]; // 詳細頁完整網址
+          imdbId = "tt"+ fetchIMDbIdFromDetailPage(detailUrl);
+          description = imdbId
+              ? `IMDb 網頁：https://www.imdb.com/title/${imdbId}`
+              : '';
+          Logger.log(`IMDb ID: ${imdbId}`);
+          Logger.log(`description: ${description}`);
         }
 
         
@@ -64,7 +65,8 @@ function addMoviesFromAllToCalendar() {
 
         if (!foundCorrectDate) {
           calendar.createAllDayEvent(`${title} 上映`, date, {
-            description: description
+            description: description + "\n" +
+            "開眼電影："+ detailUrl
           });
           // Logger.log(`✅ 新增電影: ${title}，上映日: ${date.toDateString()}`);
           recordChange('新增', title, date ,description);   // 呼叫獨立函式
