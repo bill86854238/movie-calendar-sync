@@ -1,29 +1,98 @@
-# movie-calendar-sync
+# 🎬 movie-calendar-sync
 
-這個專案是一個 Google Apps Script 腳本，用來自動從《開眼電影網》擷取即將上映的電影資料，並同步到 Google 日曆。
-
-## 功能特色
-
-- 自動抓取《開眼電影網》上映排程
-- 每部電影建立「電影名稱 上映」的全日行事曆事件
-- 支援上映日期變動時，自動更新（刪除錯誤日期事件，新增正確日期事件）
-- 紀錄新增與修改的歷程到 Google 試算表，方便追蹤
-- 建議每日執行一次，保持行事曆資料最新
-
-## 使用方式
-
-1. 在 Google Apps Script 中貼上 `addMoviesFromAllToCalendar()` 函式及相關輔助函式
-2. 將你的 Google Calendar ID 填入程式碼中
-3. （可選）設定 Google 試算表並提供試算表 ID，用於紀錄變動歷程
-4. 設定時間驅動器（Trigger）每天定期執行同步程式，建議每天跑一次
-
-## 注意事項
-
-- 確認 Google Calendar 和 Google 試算表有權限供腳本存取
-- 若試算表 ID 未提供，會跳過紀錄歷程的步驟
-- 每次同步會自動檢查是否已有該電影日期事件，避免重複新增
-- 當發現電影上映日期變更時，會更新日曆事件並記錄變動
+這個專案是一個 Google Apps Script 腳本，用來從《開眼電影網》自動擷取即將上映電影的資料，並建立對應的 Google 日曆事件。
 
 ---
 
-歡迎依需求調整並擴充功能！
+## 📌 功能特色
+
+- 自動抓取《開眼電影網》的上映排程
+- 每部電影建立「電影名稱 上映」的全日行事曆事件
+- 若電影上映日期變動，自動刪除錯誤日期並新增正確日期
+- 可記錄新增歷程至 Google Sheet（需設定 `sheetId`）
+- 每日排程執行一次，確保行事曆最新
+
+---
+
+## 🚀 使用方式
+
+1. 將 `addMoviesFromAllToCalendar()` 等函式貼入 Google Apps Script 編輯器
+2. 替換你的 Google Calendar ID
+3. （可選）設定 Google Sheet ID 記錄歷程
+4. 建立每日時間驅動器（trigger）定期執行
+
+---
+
+## 🔄 Google Apps Script × GitHub 專案同步說明
+
+本專案採用 Google Apps Script（GAS）結合 [`clasp`](https://github.com/google/clasp) 工具，並以 GitHub 進行版本控制，方便多人協作與雲端同步。
+
+### 🧱 一、專案初始化流程
+
+```bash
+git clone https://github.com/你的帳號/專案名稱.git
+cd 專案名稱
+mkdir src
+
+```
+
+---
+
+### ⚙️ 二、clasp 設定與 GAS 專案同步
+
+1. 安裝與登入 clasp：
+```bash
+npm install -g @google/clasp
+clasp login
+```
+
+2. 建立並設定 `.clasp.json`：
+```bash
+cp .clasp.json.example .clasp.json
+```
+
+填入你的 Script ID（從 GAS 編輯器取得）：
+```json
+{
+  "scriptId": "你的 Script ID",
+  "rootDir": "./src"
+}
+```
+
+3. 同步 GAS 程式碼：
+```bash
+clasp pull   # 從雲端拉回現有程式碼
+```
+
+---
+
+### 🛠️ 三、日常開發常用指令
+
+| 指令           | 用途                          |
+|----------------|-------------------------------|
+| `clasp push`   | 推送本地修改到 GAS            |
+| `clasp pull`   | 從 GAS 拉取最新程式碼         |
+| `clasp open`   | 開啟線上 GAS 編輯器           |
+
+---
+
+### 📁 四、目錄結構範例
+
+```
+movie-calendar-sync/
+├─ src/              # 所有 GAS 程式碼
+├─ .clasp.json       # 本地設定（請勿上傳 Git）
+├─ .gitignore        # Git 忽略規則
+└─ README.md         # 專案說明文件
+```
+
+---
+
+### ⚠️ 五、注意事項
+
+- `.clasp.json` 僅供本地設定，請勿提交到 GitHub
+- 若遇同步衝突，可使用 `clasp pull --force` 強制覆蓋
+- `scriptId` 可於 GAS 編輯器 → 專案設定頁面複製
+- 建議所有程式碼放在 `src/` 目錄下，利於同步與版本控制
+- 進階自動化或協作需求，請參考 [Clasp 官方文件](https://github.com/google/clasp)
+
