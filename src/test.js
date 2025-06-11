@@ -1,3 +1,3 @@
 function testImdbApi() {
-      Logger.log(fetchIMDbInfo("Dangerous Animals"));
+      Logger.log(fetchIMDbInfo("tt1674782"));
 }

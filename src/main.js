@@ -21,8 +21,23 @@ function addMoviesFromAllToCalendar() {
       const liBlock = liMatch[1];
       const titleMatch = /<div class="filmtitle">\s*<a[^>]*>(.*?)<\/a>/i.exec(liBlock);
       if (titleMatch) {
+        const detaiMatch = /<div class="filmtitle">\s*<a\s+href="([^"]+)">([^<]+)<\/a>/i.exec(liBlock);
+        let  description = '';
+        let imdbId = '';
+        if(detaiMatch){
+        const detailUrl = "https://www.atmovies.com.tw" + detaiMatch[1]; // 詳細頁完整網址
+        imdbId = "tt"+ fetchIMDbIdFromDetailPage(detailUrl);
+        description = imdbId
+            ? `IMDb 網頁：https://www.imdb.com/title/${imdbId}`
+            : '';
+        Logger.log(`IMDb ID: ${imdbId}`);
+        Logger.log(`description: ${description}`);
+        }
+
+        
         const title = titleMatch[1].trim();
         const eventTitle = `${title} 上映`;
+
 
         // 🔍 找所有叫這個名字的事件（跨整年）
         const allEvents = calendar.getEvents(new Date('2025-01-01'), new Date('2026-01-01'), { search: eventTitle });
@@ -40,7 +55,7 @@ function addMoviesFromAllToCalendar() {
               foundCorrectDate = true; // ✅ 已存在正確事件
             } else {
               // 🗑️ 刪除錯誤日期的事件
-              Logger.log(`❌ 刪除錯誤日期事件: ${eventTitle} (原日期: ${eventDate.toDateString()})`);
+              // Logger.log(`❌ 刪除錯誤日期事件: ${eventTitle} (原日期: ${eventDate.toDateString()})`);
               recordChange('刪除', title, eventDate);
               e.deleteEvent();
             }
@@ -48,11 +63,13 @@ function addMoviesFromAllToCalendar() {
         }
 
         if (!foundCorrectDate) {
-          calendar.createAllDayEvent(eventTitle, date);
-          Logger.log(`✅ 新增電影: ${title}，上映日: ${date.toDateString()}`);
-          recordChange('新增', title, date);   // 呼叫獨立函式
+          calendar.createAllDayEvent(`${title} 上映`, date, {
+            description: description
+          });
+          // Logger.log(`✅ 新增電影: ${title}，上映日: ${date.toDateString()}`);
+          recordChange('新增', title, date ,description);   // 呼叫獨立函式
         } else {
-          Logger.log(`🔁 已存在正確事件: ${title}，上映日: ${date.toDateString()}`);
+          // Logger.log(`🔁 已存在正確事件: ${title}，上映日: ${date.toDateString()}`);
         }
       }
     }
