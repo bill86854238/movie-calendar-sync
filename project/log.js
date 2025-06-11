@@ -1,4 +1,4 @@
-const logSheetId = "";
+const logSheetId = "1MfzWJZ4y7M-YTyGgbIOKNcW6BaOs-e7DHu33SaQanyA";
 
 /**
  * 記錄電影事件新增或修改的歷程到指定的 Google Sheet。
