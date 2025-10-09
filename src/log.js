@@ -8,7 +8,7 @@
  * @param {string} [description] - 描述
  */
 function recordChange(action, title, date , description= "") {
-  if (logSheetId == "你的GoogleSheet_ID") {
+  if (!logSheetId || logSheetId === "") {
     Logger.log('錯誤：未提供 Google Sheet ID，無法記錄歷程。');
     return; // 沒有 sheetId 就跳過，不執行後續
   }

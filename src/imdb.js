@@ -1,7 +1,7 @@
 function fetchIMDbIdFromDetailPage(detailUrl) {
   try {
     const html = UrlFetchApp.fetch(detailUrl).getContentText();
-    const match = html.match(/<a\s+href="https?:\/\/(?:www\.)?imdb\.com\/Title\?([^"]+)"[^>]*>IMDb<\/a>/i);
+    const match = html.match(/<a\s+href="https?:\/\/(?:www\.)?imdb\.com\/title\/(tt\d+)[^"]*"[^>]*>IMDb<\/a>/i);
     if (match) {
       const imdbId = match[1].trim();
       Logger.log("找到 IMDb ID: " + imdbId);

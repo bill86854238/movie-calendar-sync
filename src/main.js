@@ -27,7 +27,7 @@ function addMoviesFromAllToCalendar() {
         let detailUrl = '';
         if(detaiMatch){
           detailUrl = "https://www.atmovies.com.tw" + detaiMatch[1]; // 詳細頁完整網址
-          imdbId = "tt"+ fetchIMDbIdFromDetailPage(detailUrl);
+          imdbId = fetchIMDbIdFromDetailPage(detailUrl);
           description = imdbId
               ? `IMDb 網頁：https://www.imdb.com/title/${imdbId}`
               : '';
@@ -41,7 +41,8 @@ function addMoviesFromAllToCalendar() {
 
 
         // 🔍 找所有叫這個名字的事件（跨整年）
-        const allEvents = calendar.getEvents(new Date('2025-01-01'), new Date('2026-01-01'), { search: eventTitle });
+        const currentYear = new Date().getFullYear();
+        const allEvents = calendar.getEvents(new Date(currentYear, 0, 1), new Date(currentYear + 1, 11, 31), { search: eventTitle });
         let foundCorrectDate = false;
 
         for (const e of allEvents) {
