@@ -19,6 +19,10 @@ function addMoviesFromAllToCalendar() {
   const html = UrlFetchApp.fetch(url).getContentText();
 
   const calendar = CalendarApp.getCalendarById(calendarId);
+  if (!calendar) {
+    Logger.log(`無法取得日曆，請檢查 calendarId 是否正確: '${calendarId}'`);
+    throw new Error(`無法取得日曆 (ID: ${calendarId})`);
+  }
 
   // 正則表達式：匹配日期區塊 <h2>2024/01/01</h2> 和對應的電影列表 <ul class="filmListAll">...</ul>
   const sectionPattern = /<h2 class="major">\s*<span>(\d{4}\/\d{2}\/\d{2})<\/span>\s*<\/h2>\s*<ul class="filmListAll">([\s\S]*?)<\/ul>/g;
