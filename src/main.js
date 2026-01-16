@@ -66,10 +66,20 @@ function addMoviesFromAllToCalendar() {
 
 
         // === 檢查並清理日曆中的重複或錯誤事件 ===
-        // 搜尋整年度內所有同名的事件（避免遺漏跨年度的重複事件）
+        let foundCorrectDate = false;
+
+        // 1. 先檢查當天是否已有相同事件 (最準確，不受 search 索引延遲影響)
+        const dailyEvents = calendar.getEventsForDay(date);
+        for (const e of dailyEvents) {
+          if (e.getTitle() === eventTitle) {
+            foundCorrectDate = true;
+            break;
+          }
+        }
+
+        // 2. 搜尋整年度內所有同名的事件（避免遺漏跨年度的重複事件，並清理舊日期的事件）
         const currentYear = new Date().getFullYear();
         const allEvents = calendar.getEvents(new Date(currentYear, 0, 1), new Date(currentYear + 1, 11, 31), { search: eventTitle });
-        let foundCorrectDate = false;
 
         for (const e of allEvents) {
           const eventDate = e.getStartTime();
