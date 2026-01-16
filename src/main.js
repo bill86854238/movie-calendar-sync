@@ -14,6 +14,51 @@
  * - 搜尋整年度內同名的日曆事件，確保日期正確性
  * - 自動清理錯誤事件，避免重複或過期資料
  */
+
+/**
+ * 大掃除功能：掃描日曆中所有「XX 上映」事件，並清理重複項。
+ * 不受網頁內容限制，直接對日曆進行全面檢查。
+ */
+function cleanupAllCalendarDuplicates() {
+  const calendar = CalendarApp.getCalendarById(calendarId);
+  if (!calendar) {
+    Logger.log("找不到日曆，請檢查 config.js。");
+    return;
+  }
+
+  // 設定掃描範圍：從一年前到一年後
+  const now = new Date();
+  const startTime = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+  const endTime = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+
+  Logger.log(`開始掃描日曆重複事件... 範圍：${startTime.toLocaleDateString()} ~ ${endTime.toLocaleDateString()}`);
+
+  const events = calendar.getEvents(startTime, endTime);
+  const eventMap = {}; // 用來記錄已出現過的事件：{ "日期_標題": true }
+  let cleanupCount = 0;
+
+  for (const e of events) {
+    const title = e.getTitle();
+    // 只處理標題結尾為「 上映」的事件
+    if (title.endsWith(" 上映")) {
+      const date = e.getStartTime();
+      const dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}_${title}`;
+
+      if (eventMap[dateKey]) {
+        // 如果這個日期和標題已經出現過，就刪除這個重複項
+        Logger.log(`清理重複：${title} (${date.toLocaleDateString()})`);
+        e.deleteEvent();
+        cleanupCount++;
+      } else {
+        // 第一次見到，記錄下來
+        eventMap[dateKey] = true;
+      }
+    }
+  }
+
+  Logger.log(`大掃除完成！共刪除 ${cleanupCount} 個重複事件。`);
+}
+
 function addMoviesFromAllToCalendar() {
   const url = "https://www.atmovies.com.tw/movie/next/0/";
   let html;
