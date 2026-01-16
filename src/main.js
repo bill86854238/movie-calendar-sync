@@ -16,7 +16,19 @@
  */
 function addMoviesFromAllToCalendar() {
   const url = "https://www.atmovies.com.tw/movie/next/0/";
-  const html = UrlFetchApp.fetch(url).getContentText();
+  let html;
+  const maxRetries = 3;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      html = UrlFetchApp.fetch(url).getContentText();
+      break;
+    } catch (e) {
+      Logger.log(`連線失敗 (嘗試 ${i + 1}/${maxRetries}): ${e.message}`);
+      if (i === maxRetries - 1) throw e;
+      Utilities.sleep(1000 * Math.pow(2, i)); // 1s, 2s, 4s...
+    }
+  }
 
   const calendar = CalendarApp.getCalendarById(calendarId);
   if (!calendar) {
