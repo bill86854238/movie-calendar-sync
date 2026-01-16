@@ -69,11 +69,25 @@ function addMoviesFromAllToCalendar() {
         let foundCorrectDate = false;
 
         // 1. 先檢查當天是否已有相同事件 (最準確，不受 search 索引延遲影響)
+        // 並且清理當天已存在的重複事件
         const dailyEvents = calendar.getEventsForDay(date);
+        let sameDayEvents = [];
+
         for (const e of dailyEvents) {
           if (e.getTitle() === eventTitle) {
-            foundCorrectDate = true;
-            break;
+            sameDayEvents.push(e);
+          }
+        }
+
+        if (sameDayEvents.length > 0) {
+          foundCorrectDate = true;
+          // 如果當天有多個相同事件，保留第一個，刪除其餘的
+          if (sameDayEvents.length > 1) {
+             Logger.log(`發現當日重複事件：${title} (${dateStr}) - 共 ${sameDayEvents.length} 筆，正在清理...`);
+             for (let i = 1; i < sameDayEvents.length; i++) {
+               recordChange('刪除重複', title, date);
+               sameDayEvents[i].deleteEvent();
+            }
           }
         }
 
